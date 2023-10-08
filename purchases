@@ -1,9 +1,9 @@
 f = open('purchase_log.txt')
-file = f.read().split("\n")[:-1]
+file = f.read().split("\n")[:-1] # читаю текстовый лог и убираю перенос строки
 purchases = {}
 
 for line in file:
-    key = line.strip("}").strip("{").replace('"user_id":','').replace('"category":','').split(',')[0]
+    key = line.strip("}").strip("{").replace('"user_id":','').replace('"category":','').split(',')[0] # уудаляю лишние символы в строке, делю строку на клюь и значение
     value = line.strip("}").strip("{").replace('"user_id":','').replace('"category":','').split(',')[1]
     purchases[key] = value    
 
