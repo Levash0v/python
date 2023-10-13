@@ -1,6 +1,11 @@
-i = 0
+import datetime as datetime
+from datetime import datetime
 
-for dt in dates_list:
-    print(i, dt, dates_list[i+1])
-    
-    i += 1
+#The Moscow Times
+print(datetime.strptime('Wednesday, October 2, 2002', '%A, %B %d, %Y'))
+
+# The Guardian
+print(datetime.strptime('Friday, 11.10.13', '%A, %d.%m.%y'))
+
+# Daily News 
+print(datetime.strptime('Thursday, 18 August 1977', '%A, %d %B %Y'))
