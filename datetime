@@ -1,0 +1,6 @@
+i = 0
+
+for dt in dates_list:
+    print(i, dt, dates_list[i+1])
+    
+    i += 1
