@@ -1,3 +1,4 @@
+#Задание1
 region = pd.read_csv('region.csv') # список регионов отсюда https://github.com/hflabs/region/blob/master/region.csv не самый актуальный
 df = pd.DataFrame(region)
 geoname_code = df['geoname_code'].tolist() # номера регионов в список
@@ -18,3 +19,16 @@ a = int(data.loc[(data.reg == regCode)].sum()[0])
 if a > 0:
     print('Номер', car_noCode, 'валиден.')
 else: print('Номер не валиден.')
+
+
+#Задание2 
+#способ1: рег выражения + pandas
+some_string = 'Напишите функцию функцию, которая будет будет будет будет удалять все все все все последовательные повторы слов из из из из заданной строки строки при помощи регулярных выражений'
+
+c = re.findall(r'\w*', some_string)
+df1 = pd.DataFrame(c)
+df1.columns = ['word']
+a = df1.drop_duplicates().dropna().drop(index = 1)
+a.reset_index(drop= True, inplace= True)
+b = a['word'].tolist()
+print(' '.join(b))
