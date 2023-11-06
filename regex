@@ -1,0 +1,20 @@
+region = pd.read_csv('region.csv') # список регионов отсюда https://github.com/hflabs/region/blob/master/region.csv не самый актуальный
+df = pd.DataFrame(region)
+geoname_code = df['geoname_code'].tolist() # номера регионов в список
+
+b = []
+for i in geoname_code:
+    b.append(re.findall(r'\d{2}', i)) # убрал лишние символы
+
+data = pd.DataFrame(b)
+data.columns = ['reg'] # переимновал колонку, иначе не хотела работать
+
+car_id = input()
+regCode = str(re.findall(r'\d{2,3}\b', car_id)[0])
+car_noCode = str(re.findall(r'\w{1}\d{3}\w{2}', car_id)[0]) # без преобразования в строковое значение не печатает и не сравнивает
+
+a = int(data.loc[(data.reg == regCode)].sum()[0])
+
+if a > 0:
+    print('Номер', car_noCode, 'валиден.')
+else: print('Номер не валиден.')
