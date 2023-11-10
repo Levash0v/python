@@ -1,1 +1,15 @@
+import pandas as pd
+movies = pd.read_csv('movies.csv')
+ratings = pd.read_csv('ratings.csv') #импорт библиотеки, чтение файлов
 
+movies.head()
+ratings.head() #по какому столбцу можно объеденить таблицы
+
+df = ratings.merge(movies, on ='movieId') # объеденил по movieId
+
+df.describe()
+df['rating'].unique() # проверил данные
+
+df[['title', 'rating']].value_counts()[:1] # выбрал интересующие столбцы, почситал их кол-во и вывел первую строку
+
+>>>Shawshank Redemption, The (1994)  5.0       153
