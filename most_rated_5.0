@@ -1,4 +1,7 @@
 import pandas as pd
+
+# Задание 1
+
 movies = pd.read_csv('movies.csv')
 ratings = pd.read_csv('ratings.csv') #импорт библиотеки, чтение файлов
 
@@ -13,3 +16,22 @@ df['rating'].unique() # проверил данные
 df[['title', 'rating']].value_counts()[:1] # выбрал интересующие столбцы, почситал их кол-во и вывел первую строку
 
 >>>Shawshank Redemption, The (1994)  5.0       153
+
+
+# Задание 2
+
+data = pd.read_csv('power.csv') #чтение из файла
+
+data.head()
+
+data['country'].unique()
+data[ data['country'].str.contains('L') ]['country'].unique()
+data[ data['country'].str.contains('E') ]['country'].unique() # нахожу в таблице наименования прибалтийских стран
+
+country = data[(data['country']=='Latvia') | (data['country'] == 'Lithuania') | (data['country'] == 'Estonia')] # фильтрую по трем странам датафрейм и сохраняю в переменную
+yearContry = country[(country['year'] >= 2005) & (country['year'] <= 2010)] # выбираю диапазон дат, сохраняю в переменную
+cat = yearContry[(yearContry['category'] == 4) | (yearContry['category'] == 12) | (yearContry['category'] == 21)] # фильтр по категорий 4, 12 и 21
+cat[cat['quantity'] > 0].sum()[2:3] # добавляю условие Не учитывать в расчётах отрицательные значения quantity и беру срез первой строки со значением 
+
+>>> quantity    240580.0
+
