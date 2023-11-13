@@ -1,0 +1,27 @@
+### Задание 1
+import pandas as pd
+
+# читаю csv данные в датафрейм
+mov = pd.read_csv('movies.csv')
+rat = pd.read_csv('ratings.csv')
+
+# объединение таблиц по полю movieId
+df = rat.merge(mov, on ='movieId')
+
+def classific(row):
+    """функция классифицирует фильмы по правилам:
+оценка 2 и ниже — низкий рейтинг;
+оценка 4 и ниже — средний рейтинг;
+оценка 4.5 и 5 — высокий рейтинг."""
+    if row['rating'] <= 2: 
+        return 'низкий рейтинг'
+    if row['rating'] <= 4:
+        return 'средний рейтинг'
+    if row['rating'] > 4:
+        return 'высокий рейтинг'
+
+# добавляю в датафрейм поле class через функцию classific
+df['class'] = df.apply(classific, axis=1)
+
+### Задание 2
+
