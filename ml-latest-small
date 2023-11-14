@@ -47,4 +47,4 @@ def region(data):
 
 reg1 = key[127:128]
 region(reg1)
-key['region'] = key.apply(region, axis=1)
+key['region'] = key.apply(lambda row: region, axis=1)
