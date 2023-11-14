@@ -25,3 +25,26 @@ df['class'] = df.apply(classific, axis=1)
 
 ### Задание 2
 
+key = pd.read_csv('keywords.csv')
+
+def region(data):
+    geo_data = {
+        'Центр':['москва', 'тула', 'ярославль'],
+        'Северо-Запад': ['петербург', 'псков', 'мурманск'],
+        'Дальний Восток': ['владивосток', 'сахалин', 'хабаровск']
+        }
+
+    for lst in data['keyword'].str.split(' '):
+        for i in lst:
+            #print(i)
+            if i in geo_data['Центр']:
+                return 'Центр'
+            elif i in geo_data['Северо-Запад']:
+                return 'Северо-Запад'
+            elif i in geo_data['Дальний Восток']:
+                return 'Дальний Восток'
+        return 'undefined'
+
+reg1 = key[127:128]
+region(reg1)
+key['region'] = key.apply(region, axis=1)
