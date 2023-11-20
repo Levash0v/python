@@ -1,0 +1,29 @@
+import numpy as np
+
+# задаём кредит в кошельке = 5
+wallet = 5
+for i in range(wallet):
+    # генерируем случайную величину от 0 до 999
+    random_score = np.random.randint(0, 1000)
+    print(random_score) # каждый раз печатаем случайную величину, иммитируя выпадение числа в игровом автомате
+    wallet -= 1 # вычитаем один кредит из кошелька
+# далее задаем выигрывающие комбинации
+    if random_score == 777:
+        wallet += 200
+    elif random_score == 999:
+        wallet += 100
+    elif random_score == 555:
+        wallet += 50
+    elif random_score == 333:
+        wallet += 15
+    elif random_score == 111:
+        wallet += 10
+    elif int(str(random_score)[:2]) == 77: # приведение к str срез двух последних чисел, возврат в int
+        wallet += 5
+    elif int(str(random_score)[:1]) == 7: # приведение к str срез одного последнего числа, возврат в int
+        wallet += 3
+    elif random_score % 100 == 0: # условие деления без остатка на 100, то есть последние два числа 00
+        wallet += 2
+    elif (random_score % 10 ** 2) // 10 **1 > 0 and (random_score % 10 ** 1) // 10 ** 0 == 0: # тут делается проверка чтобы предидущее условие не задваивалось, т.е. только один 0
+        wallet += 1
+
