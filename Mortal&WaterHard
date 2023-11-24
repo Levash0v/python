@@ -1,0 +1,131 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.sandbox.regression.predstd import wls_prediction_std
+
+### Задание 1
+# Читаем данные из файла
+df = pd.read_csv('water.csv')
+
+# построил точечный график
+df.plot(kind='scatter', x='hardness', y='mortality')
+
+# рассчитал коэффициент корреляции Пирсона
+df[['mortality', 'hardness']].corr()
+
+# рассчитал коэффициент корреляции Спирмена
+df[['mortality', 'hardness']].corr(method='spearman')
+
+# построил модель линейной регрессии
+X = df['hardness']
+y = df['mortality']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
+X_const = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_const)
+results = model.fit()
+print(results.summary())
+print('Parameters: ', results.params)
+
+# рассчитал(а) коэффициент детерминации
+print('R2: ', results.rsquared)
+
+# вывел график остатков
+prstd, iv_l, iv_u = wls_prediction_std(results)
+fig, ax = plt.subplots(figsize=(8,6))
+ax.plot(X_const.iloc[:, 1], y_train, 'o', label="data")
+ax.plot(X_const.iloc[:, 1], results.fittedvalues, 'r--.', label="OLS")
+ax.plot(X_const.iloc[:, 1], iv_u, 'g--')
+ax.plot(X_const.iloc[:, 1], iv_l, 'g--')
+ax.legend(loc='best')
+
+#  прогноз остатки
+plt.scatter(x=X_const.iloc[:, 1], y=results.resid)
+plt.xlabel('Прогноз')
+plt.ylabel('Остатки')
+# Между жёсткостью воды и средней годовой смертностью существует не ярко выраженная линейная зависимость, уменьшающаяся сметность с ростом жесткости воды
+
+### Задание 2
+# выделил датафрейм для северных городов
+df_N = df.loc[df['location'] == 'North']
+
+# построил точечный график
+df_N.plot(kind='scatter', x='hardness', y='mortality')
+
+# рассчитал коэффициент корреляции Пирсона
+df_N[['mortality', 'hardness']].corr()
+
+# рассчитал коэффициент корреляции Спирмена
+df_N[['mortality', 'hardness']].corr(method='spearman')
+
+# построил модель линейной регрессии
+X = df_N['hardness']
+y = df_N['mortality']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
+X_const = sm.add_constant(X_train)
+model_N = sm.OLS(y_train, X_const)
+results = model_N.fit()
+print(results.summary())
+print('Parameters: ', results.params)
+
+# рассчитал(а) коэффициент детерминации
+print('R2: ', results.rsquared)
+
+# вывел график остатков
+prstd, iv_l, iv_u = wls_prediction_std(results)
+fig, ax = plt.subplots(figsize=(8,6))
+ax.plot(X_const.iloc[:, 1], y_train, 'o', label="data")
+ax.plot(X_const.iloc[:, 1], results.fittedvalues, 'r--.', label="OLS")
+ax.plot(X_const.iloc[:, 1], iv_u, 'g--')
+ax.plot(X_const.iloc[:, 1], iv_l, 'g--')
+ax.legend(loc='best')
+
+#  прогноз, остатки
+plt.scatter(x=X_const.iloc[:, 1], y=results.resid)
+plt.xlabel('Прогноз')
+plt.ylabel('Остатки')
+# Между жёсткостью воды и средней годовой смертностью в северных городах мало заметная линейная зависимость, 
+# немного уменьшающаяся смертность с ростом жесткости воды
+
+### Задание 3
+# выделил датафрейм с данными южных городов
+df_S = df.loc[df['location'] == 'South']
+
+# построил точечный график
+df_S.plot(kind='scatter', x='hardness', y='mortality')
+
+# рассчитал коэффициент корреляции Пирсона
+df_S[['mortality', 'hardness']].corr()
+
+# рассчитал коэффициент корреляции Спирмена
+df_S[['mortality', 'hardness']].corr(method='spearman')
+
+# построил модель линейной регрессии
+X = df_S['hardness']
+y = df_S['mortality']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=42)
+X_const = sm.add_constant(X_train)
+model_S = sm.OLS(y_train, X_const)
+results = model_S.fit()
+print(results.summary())
+print('Parameters: ', results.params)
+
+# рассчитал коэффициент детерминации
+print('R2: ', results.rsquared)
+
+# вывел график остатков
+prstd, iv_l, iv_u = wls_prediction_std(results)
+fig, ax = plt.subplots(figsize=(8,6))
+ax.plot(X_const.iloc[:, 1], y_train, 'o', label="data")
+ax.plot(X_const.iloc[:, 1], results.fittedvalues, 'r--.', label="OLS")
+ax.plot(X_const.iloc[:, 1], iv_u, 'g--')
+ax.plot(X_const.iloc[:, 1], iv_l, 'g--')
+ax.legend(loc='best')
+
+#  прогноз, остатки
+plt.scatter(x=X_const.iloc[:, 1], y=results.resid)
+plt.xlabel('Прогноз')
+plt.ylabel('Остатки')
+# Между жёсткостью воды и средней годовой смертностью в южных городах самая сильно заметная линейная зависимость, 
+# сильнее первых двух выборок уменьшающаяся смертность с ростом жесткости воды
