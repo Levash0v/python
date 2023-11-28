@@ -1,0 +1,83 @@
+from sklearn.datasets import load_iris
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colors
+from sklearn.preprocessing import StandardScaler
+
+# проверяем данные
+iris = load_iris()
+print(iris.DESCR)
+
+# загружаем данные в датафрейм
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+# Оставляю два признака - sepal_length и sepal_width и целевую переменную
+data = df.iloc [:, [0,1]]
+data_class = iris.target
+
+# Разделил данные на выборку для обучения и тестирования
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(data, data_class, test_size=0.25, random_state=42)
+
+# Строю модель LDA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+lda = LinearDiscriminantAnalysis()
+
+# обучение данных
+lda.fit(X_train, y_train)
+
+# делаю прогноз на тестовой выборке
+lda.predict(X_test)
+result = pd.DataFrame([y_test, lda.predict(X_test)]).T
+
+# проверяю точность
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test, lda.predict(X_test))
+>>> 0.868421052631579 больше 0.7 хорошая точность
+
+# Визуализирую предсказания для тестовой выборки и центры классов
+
+# scatter plot
+plt.scatter(x=X_train['sepal length (cm)'], y=X_train['sepal width (cm)'], c=y_train)
+# центроиды
+plt.scatter(lda.means_[:, 0], lda.means_[:, 1], c='r', s=150, marker='*')
+# условная "сетку"
+nx, ny = 200, 100
+x_min, x_max = plt.xlim()
+y_min, y_max = plt.ylim()
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, nx),
+                         np.linspace(y_min, y_max, ny))
+# предсказываю класс каждой точки сетки
+Z = lda.predict_proba(np.c_[xx.ravel(), yy.ravel()])
+Z = Z[:, 1].reshape(xx.shape)
+# закрашиваю классы разными цветами
+plt.pcolormesh(xx, yy, Z, cmap='summer',
+                   norm=colors.Normalize(0., 1.), zorder=-1, shading='auto')
+plt.contour(xx, yy, Z, [0.5], linewidths=2., colors='white')
+plt.show()
+
+# Отбрасываю целевую переменную и оставляю только два признака - sepal_length и sepal_width
+
+from sklearn.cluster import KMeans
+# Устанавливаю пареметр кластеров = 3
+kmeans = KMeans(n_clusters=3, random_state=0, n_init="auto")
+clusters = kmeans.fit_predict(X_train)
+# визуализирую полученную кластеризацию
+plt.scatter(X_train['sepal length (cm)'], X_train['sepal width (cm)'], cmap='viridis', c=clusters, s=60)
+
+# Для визуального определения оптимального кол-ва кластеров строю график локтя
+# список для инерции
+k_inertia = []
+# задал диапазон кластеров
+ks = range(1, 20)
+for k in ks:
+    clf_kmeans = KMeans(n_clusters=k)
+    clf_kmeans.fit_predict(X_train)
+    # добавляю итерацию каждой модели в список
+    k_inertia.append(clf_kmeans.inertia_)
+plt.plot(ks, k_inertia)
+plt.plot(ks, k_inertia ,'ro')
+
+# видно что оптимальное кол-во кластеров три 
+
